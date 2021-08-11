@@ -93,17 +93,10 @@ def getRep(img, fromwhere):
     response['status'] = 200
     if verbose:
         print("Processing {}.".format(img))
-    print("==================")
-    print(img)
-    print("==================")
     # convert string data to numpy array
     npimg = np.fromstring(img, np.uint8)
-    print(npimg)
-    print("==================")
     # convert numpy array to image
     image = cv2.imdecode(npimg, 1)
-    print(image)
-    print("==================")
     bgrImg = image #cv2.imread(imgPath) 
     if bgrImg is None:
         response['status'] = 500

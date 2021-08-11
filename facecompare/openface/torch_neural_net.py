@@ -205,7 +205,7 @@ stdout: {}
         """
         assert rgbImg is not None
 
-        t = '/home/desktop-pr-27/Desktop/ID_Card_Extractor/images/{}.png'.format(
+        t = os.getcwd()+'/images/{}.png'.format(
             binascii.b2a_hex(os.urandom(8)))
         bgrImg = cv2.cvtColor(rgbImg, cv2.COLOR_RGB2BGR)
         cv2.imwrite(t, bgrImg)

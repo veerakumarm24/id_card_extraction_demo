@@ -1,5 +1,6 @@
 import logging
 import os
+from io import BytesIO
 
 import click
 import click_logging
@@ -13,8 +14,8 @@ import json
 
 import spacy
 import spacy.cli
-from facecompare.demos.face_compare import *
 from PIL import Image
+from facecompare.demos.face_compare import *
 
 
 @click.command()
@@ -34,13 +35,12 @@ def text(input, output, verbose):
         if not extension:
             logger.info("Image must be jpg or png format!")
             click.echo("Image must be jpg or png format!")
-        pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
         text2 = pytesseract.image_to_string(im)
         text2 = text2.replace('\n', ' ')
         text2 = text2.replace('\t', ' ')
 
         # LOAD THE CUSTOM NER MODEL
-        nlp2 = spacy.load(os.getcwd() + '\\Custom_NER')
+        nlp2 = spacy.load(os.getcwd() + '/Custom_NER')
         doc2 = nlp2(text2)
         p = []
         for ent in doc2.ents:
@@ -49,7 +49,11 @@ def text(input, output, verbose):
         with open(output, 'w') as out:
             for item in p:
                 out.write(json.dumps(item))
-        status = cropFaces(im)
+        buf = BytesIO()
+        im.save(buf, 'jpeg')
+        buf.seek(0)
+        image_bytes = buf.read()
+        status = cropFaces(image_bytes)
         if status == True:
             logger.info('Image cropped and saved')
         else:
